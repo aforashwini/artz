@@ -1,6 +1,10 @@
 import os
+import sys
 import uuid
 import traceback
+
+# Shapely split operations can recurse deeply on complex polygons
+sys.setrecursionlimit(10000)
 
 from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename

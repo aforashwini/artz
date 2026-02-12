@@ -47,9 +47,12 @@ def extract_shapes(image_path):
             polygon = Polygon(coords)
             if not polygon.is_valid:
                 polygon = polygon.buffer(0)
+            # buffer(0) can return MultiPolygon; take the largest piece
+            if polygon.geom_type == "MultiPolygon":
+                polygon = max(polygon.geoms, key=lambda g: g.area)
             if polygon.is_empty or polygon.area < min_area:
                 continue
-        except Exception:
+        except (RecursionError, Exception):
             continue
 
         shapes.append({

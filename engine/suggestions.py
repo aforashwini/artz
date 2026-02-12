@@ -246,9 +246,12 @@ def _rule_interlocker(polygon, metrics, label):
 def _safe_split(polygon, line):
     """Split a polygon by a line, returning list of pieces or None."""
     try:
-        # Extend line slightly to ensure it crosses the polygon boundary
-        result = split(polygon, line)
+        # Simplify polygon to reduce vertex count and avoid deep recursion
+        simplified = polygon.simplify(1.0, preserve_topology=True)
+        if simplified.is_empty or not simplified.is_valid:
+            simplified = polygon
+        result = split(simplified, line)
         pieces = [g for g in result.geoms if isinstance(g, Polygon) and g.area > 0]
         return pieces if len(pieces) >= 2 else None
-    except Exception:
+    except (RecursionError, Exception):
         return None
