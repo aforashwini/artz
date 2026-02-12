@@ -3,47 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fabric Waste Optimizer — AI Pattern Analysis</title>
+    <title>FABRIC WASTE OPTIMIZER // AI Pattern Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
+    <!-- Animated background grid -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <div class="bg-glow bg-glow-3"></div>
+
+    <!-- Scan lines overlay -->
+    <div class="scanlines"></div>
+
     <header>
         <div class="container">
-            <div class="logo">
-                <span class="logo-icon">&#9986;</span>
-                <h1>Fabric Waste Optimizer</h1>
+            <div class="header-inner">
+                <div class="logo">
+                    <div class="logo-hex">
+                        <svg viewBox="0 0 60 60" class="logo-svg">
+                            <polygon points="30,2 56,17 56,43 30,58 4,43 4,17" fill="none" stroke="url(#neonGrad)" stroke-width="2"/>
+                            <text x="30" y="36" text-anchor="middle" fill="url(#neonGrad)" font-size="22" font-family="Jura">&#9986;</text>
+                            <defs>
+                                <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#00f0ff"/>
+                                    <stop offset="50%" style="stop-color:#bf00ff"/>
+                                    <stop offset="100%" style="stop-color:#00ff88"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <h1>FABRIC WASTE <span class="neon-text">OPTIMIZER</span></h1>
+                        <div class="tagline">
+                            <span class="tag-dash">&#x2501;&#x2501;</span>
+                            AI-Powered Pattern Cutting Analysis
+                            <span class="tag-dash">&#x2501;&#x2501;</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-stats">
+                    <div class="header-stat">
+                        <span class="header-stat-val neon-cyan">v2.0</span>
+                        <span class="header-stat-lbl">SYSTEM</span>
+                    </div>
+                    <div class="header-stat">
+                        <span class="header-stat-val neon-magenta">ONLINE</span>
+                        <span class="header-stat-lbl">STATUS</span>
+                    </div>
+                </div>
             </div>
-            <p class="tagline">AI-powered pattern cutting analysis &mdash; reduce waste, save fabric</p>
         </div>
+        <div class="header-line"></div>
     </header>
 
     <main class="container">
         <!-- Upload Section -->
-        <section id="upload-section" class="card">
-            <h2>Upload Pattern Image</h2>
+        <section id="upload-section" class="glass-card fade-in">
+            <div class="card-header-bar">
+                <div class="card-dot"></div>
+                <div class="card-dot"></div>
+                <div class="card-dot"></div>
+                <span class="card-header-label">// UPLOAD MODULE</span>
+            </div>
+
+            <h2>Initialize <span class="neon-text">Pattern Scan</span></h2>
             <p class="helper-text">
-                Upload an image of your garment pattern pieces (dark outlines on a light background).
-                The AI will detect the shapes, analyze waste potential, and suggest optimizations.
+                Upload a pattern image with dark outlines on a light background.
+                The AI will vectorize shapes, compute waste geometry, and generate optimization suggestions.
             </p>
 
             <div id="drop-zone" class="drop-zone">
                 <div class="drop-zone-content">
-                    <div class="drop-icon">&#128206;</div>
-                    <p>Drag &amp; drop your pattern image here</p>
-                    <p class="small">or click to browse</p>
-                    <p class="small muted">Supports PNG, JPG, BMP, TIFF &bull; Max 16 MB</p>
+                    <div class="drop-hex">
+                        <svg viewBox="0 0 80 80" class="drop-svg">
+                            <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 2"/>
+                            <text x="40" y="46" text-anchor="middle" fill="currentColor" font-size="28">&#8682;</text>
+                        </svg>
+                    </div>
+                    <p class="drop-main">Drag &amp; drop pattern image</p>
+                    <p class="drop-sub">or click to browse filesystem</p>
+                    <div class="drop-formats">
+                        <span class="format-tag">PNG</span>
+                        <span class="format-tag">JPG</span>
+                        <span class="format-tag">BMP</span>
+                        <span class="format-tag">TIFF</span>
+                        <span class="format-sep">|</span>
+                        <span class="format-limit">MAX 16 MB</span>
+                    </div>
                 </div>
                 <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.bmp,.tiff" hidden>
             </div>
 
             {% if samples %}
             <div class="samples-section">
-                <h3>Or try a sample pattern:</h3>
+                <div class="section-label">
+                    <span class="label-line"></span>
+                    <span>SAMPLE PATTERNS</span>
+                    <span class="label-line"></span>
+                </div>
                 <div class="sample-grid">
                     {% for sample in samples %}
                     <button class="sample-btn" data-sample="{{ sample }}">
-                        <img src="/samples/{{ sample }}" alt="{{ sample }}">
-                        <span>{{ sample }}</span>
+                        <div class="sample-img-wrap">
+                            <img src="/samples/{{ sample }}" alt="{{ sample }}">
+                            <div class="sample-scan-line"></div>
+                        </div>
+                        <span class="sample-name">{{ sample.replace('_', ' ').replace('.png', '') | upper }}</span>
                     </button>
                     {% endfor %}
                 </div>
@@ -51,27 +120,86 @@
             {% endif %}
 
             <div id="preview-area" class="preview-area hidden">
-                <img id="preview-img" src="" alt="Preview">
-                <button id="analyze-btn" class="btn btn-primary">Analyze Pattern</button>
+                <div class="preview-frame">
+                    <div class="preview-corner tl"></div>
+                    <div class="preview-corner tr"></div>
+                    <div class="preview-corner bl"></div>
+                    <div class="preview-corner br"></div>
+                    <img id="preview-img" src="" alt="Preview">
+                </div>
+                <button id="analyze-btn" class="btn btn-neon">
+                    <span class="btn-icon">&#9881;</span>
+                    Run Analysis
+                    <span class="btn-glow"></span>
+                </button>
             </div>
         </section>
 
         <!-- Loading -->
-        <section id="loading-section" class="card hidden">
+        <section id="loading-section" class="glass-card hidden">
             <div class="loader-wrap">
-                <div class="loader"></div>
-                <h3>Analyzing your pattern...</h3>
-                <p class="muted">Detecting shapes, measuring waste factors, generating suggestions</p>
+                <div class="loader-ring">
+                    <div class="loader-ring-inner"></div>
+                    <svg class="loader-hex" viewBox="0 0 100 100">
+                        <polygon points="50,5 91,27.5 91,72.5 50,95 9,72.5 9,27.5" fill="none" stroke="url(#loadGrad)" stroke-width="2" stroke-dasharray="6 3">
+                            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="4s" repeatCount="indefinite"/>
+                        </polygon>
+                        <polygon points="50,15 81,32.5 81,67.5 50,85 19,67.5 19,32.5" fill="none" stroke="url(#loadGrad2)" stroke-width="1.5" stroke-dasharray="4 4">
+                            <animateTransform attributeName="transform" type="rotate" from="360 50 50" to="0 50 50" dur="3s" repeatCount="indefinite"/>
+                        </polygon>
+                        <defs>
+                            <linearGradient id="loadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#00f0ff"/>
+                                <stop offset="100%" style="stop-color:#bf00ff"/>
+                            </linearGradient>
+                            <linearGradient id="loadGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#00ff88"/>
+                                <stop offset="100%" style="stop-color:#00f0ff"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h3 class="loader-title">Analyzing Pattern Geometry<span class="typing-dots"></span></h3>
+                <div class="loader-steps">
+                    <div class="loader-step active" id="step-detect">
+                        <span class="step-indicator"></span>
+                        Detecting contours &amp; vectorizing shapes
+                    </div>
+                    <div class="loader-step" id="step-analyze">
+                        <span class="step-indicator"></span>
+                        Computing waste factors &amp; concavity metrics
+                    </div>
+                    <div class="loader-step" id="step-suggest">
+                        <span class="step-indicator"></span>
+                        Generating optimization suggestions
+                    </div>
+                    <div class="loader-step" id="step-render">
+                        <span class="step-indicator"></span>
+                        Rendering visual overlays
+                    </div>
+                </div>
             </div>
         </section>
 
         <!-- Results Section -->
         <section id="results-section" class="hidden">
             <!-- Overview -->
-            <div id="overview-card" class="card">
-                <h2>Detection Overview</h2>
+            <div id="overview-card" class="glass-card fade-in">
+                <div class="card-header-bar">
+                    <div class="card-dot"></div>
+                    <div class="card-dot"></div>
+                    <div class="card-dot"></div>
+                    <span class="card-header-label">// SCAN RESULTS</span>
+                </div>
+                <h2>Detection <span class="neon-text">Overview</span></h2>
                 <div class="overview-content">
-                    <img id="overview-img" src="" alt="Overview">
+                    <div class="overview-img-wrap">
+                        <div class="preview-corner tl"></div>
+                        <div class="preview-corner tr"></div>
+                        <div class="preview-corner bl"></div>
+                        <div class="preview-corner br"></div>
+                        <img id="overview-img" src="" alt="Overview">
+                    </div>
                     <div id="overview-stats" class="stats-panel"></div>
                 </div>
             </div>
@@ -81,14 +209,21 @@
 
             <!-- Start Over -->
             <div class="center-action">
-                <button id="reset-btn" class="btn btn-secondary">Analyze Another Pattern</button>
+                <button id="reset-btn" class="btn btn-outline">
+                    <span class="btn-icon">&#8634;</span>
+                    Analyze Another Pattern
+                </button>
             </div>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <p>Fabric Waste Optimizer &mdash; AI-Powered Pattern Cutting Analysis</p>
+            <div class="footer-inner">
+                <div class="footer-brand">FABRIC WASTE OPTIMIZER</div>
+                <div class="footer-divider"></div>
+                <div class="footer-sub">AI-Powered Pattern Cutting Analysis System</div>
+            </div>
         </div>
     </footer>
 
