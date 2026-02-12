@@ -883,6 +883,28 @@ header {
     border-color: rgba(0, 240, 255, 0.2);
 }
 
+.suggestion-img-placeholder {
+    width: 320px;
+    max-width: 45%;
+    min-height: 200px;
+    border-radius: var(--radius-sm);
+    border: 1px dashed var(--glass-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--silver);
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.suggestion-img-placeholder small {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
 .suggestion-text {
     flex: 1;
 }

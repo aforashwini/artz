@@ -182,7 +182,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // --- Render Results ---
     function renderResults(data) {
         // Overview image
-        overviewImg.src = data.overview;
+        if (data.overview) {
+            overviewImg.src = data.overview;
+            overviewImg.style.display = "";
+        } else {
+            overviewImg.style.display = "none";
+        }
 
         // Stats
         let totalWaste = 0;
@@ -236,6 +241,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const neonBorder = hexToRgba(s.color, 0.25);
                 const neonGlow = hexToRgba(s.color, 0.1);
 
+                const imgHTML = s.image
+                    ? `<img src="${s.image}" alt="${s.title}">`
+                    : `<div class="suggestion-img-placeholder">
+                         <span>&#9881;</span>
+                         <small>Diagram unavailable</small>
+                       </div>`;
+
                 suggestionsHTML += `
                     <div class="suggestion-card" style="animation-delay: ${(pieceIdx * 0.15) + (sIdx * 0.1)}s;">
                         <div class="suggestion-card-header" style="background: ${neonBg}; border-left: 3px solid ${s.color};">
@@ -243,7 +255,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             <span class="impact-badge" style="background: ${neonBg}; color: ${s.color}; border: 1px solid ${neonBorder}; box-shadow: 0 0 10px ${neonGlow};">${s.impact}</span>
                         </div>
                         <div class="suggestion-card-body">
-                            <img src="${s.image}" alt="${s.title}">
+                            ${imgHTML}
                             <div class="suggestion-text">
                                 <p>${s.description}</p>
                                 <span class="savings-tag" style="background: ${neonBg}; color: ${s.color}; border-color: ${neonBorder}; box-shadow: 0 0 12px ${neonGlow};">
