@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fabric Waste Optimizer — AI Pattern Analysis</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <span class="logo-icon">&#9986;</span>
+                <h1>Fabric Waste Optimizer</h1>
+            </div>
+            <p class="tagline">AI-powered pattern cutting analysis &mdash; reduce waste, save fabric</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Upload Section -->
+        <section id="upload-section" class="card">
+            <h2>Upload Pattern Image</h2>
+            <p class="helper-text">
+                Upload an image of your garment pattern pieces (dark outlines on a light background).
+                The AI will detect the shapes, analyze waste potential, and suggest optimizations.
+            </p>
+
+            <div id="drop-zone" class="drop-zone">
+                <div class="drop-zone-content">
+                    <div class="drop-icon">&#128206;</div>
+                    <p>Drag &amp; drop your pattern image here</p>
+                    <p class="small">or click to browse</p>
+                    <p class="small muted">Supports PNG, JPG, BMP, TIFF &bull; Max 16 MB</p>
+                </div>
+                <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.bmp,.tiff" hidden>
+            </div>
+
+            {% if samples %}
+            <div class="samples-section">
+                <h3>Or try a sample pattern:</h3>
+                <div class="sample-grid">
+                    {% for sample in samples %}
+                    <button class="sample-btn" data-sample="{{ sample }}">
+                        <img src="/samples/{{ sample }}" alt="{{ sample }}">
+                        <span>{{ sample }}</span>
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div id="preview-area" class="preview-area hidden">
+                <img id="preview-img" src="" alt="Preview">
+                <button id="analyze-btn" class="btn btn-primary">Analyze Pattern</button>
+            </div>
+        </section>
+
+        <!-- Loading -->
+        <section id="loading-section" class="card hidden">
+            <div class="loader-wrap">
+                <div class="loader"></div>
+                <h3>Analyzing your pattern...</h3>
+                <p class="muted">Detecting shapes, measuring waste factors, generating suggestions</p>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="results-section" class="hidden">
+            <!-- Overview -->
+            <div id="overview-card" class="card">
+                <h2>Detection Overview</h2>
+                <div class="overview-content">
+                    <img id="overview-img" src="" alt="Overview">
+                    <div id="overview-stats" class="stats-panel"></div>
+                </div>
+            </div>
+
+            <!-- Suggestions per piece -->
+            <div id="suggestions-container"></div>
+
+            <!-- Start Over -->
+            <div class="center-action">
+                <button id="reset-btn" class="btn btn-secondary">Analyze Another Pattern</button>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Fabric Waste Optimizer &mdash; AI-Powered Pattern Cutting Analysis</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
