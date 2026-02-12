@@ -15,9 +15,10 @@ from engine.suggestions import generate_suggestions
 from engine.visualization import generate_visualization, generate_overview
 
 app = Flask(__name__)
-app.config["UPLOAD_FOLDER"] = os.path.join(os.path.dirname(__file__), "uploads")
-app.config["RESULT_FOLDER"] = os.path.join(os.path.dirname(__file__), "results")
-app.config["SAMPLE_FOLDER"] = os.path.join(os.path.dirname(__file__), "samples")
+_BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+app.config["UPLOAD_FOLDER"] = os.path.join(_BASE_DIR, "uploads")
+app.config["RESULT_FOLDER"] = os.path.join(_BASE_DIR, "results")
+app.config["SAMPLE_FOLDER"] = os.path.join(_BASE_DIR, "samples")
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16 MB max
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "bmp", "tiff"}
@@ -75,19 +76,24 @@ def analyze():
         results = generate_suggestions(shapes)
 
         # Generate overview image
+        overview_error = None
         try:
             overview_file = generate_overview(shapes, original_image)
             overview_url = f"/results/{overview_file}"
         except (RecursionError, Exception) as e:
             traceback.print_exc()
             overview_url = None
+            overview_error = f"{type(e).__name__}: {e}"
 
         # Generate suggestion visualizations
         response_data = {
             "overview": overview_url,
             "piece_count": len(shapes),
             "pieces": [],
+            "debug_errors": [],
         }
+        if overview_error:
+            response_data["debug_errors"].append(f"overview: {overview_error}")
 
         for result in results:
             shape = result["shape"]
@@ -101,6 +107,9 @@ def analyze():
                 except (RecursionError, Exception) as e:
                     traceback.print_exc()
                     image_url = None
+                    response_data["debug_errors"].append(
+                        f"{suggestion.get('title', '?')}: {type(e).__name__}: {e}"
+                    )
 
                 suggestions_out.append({
                     "type": suggestion["type"],

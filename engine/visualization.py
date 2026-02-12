@@ -10,7 +10,8 @@ import numpy as np
 from shapely.geometry import Polygon
 
 
-RESULT_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "results")
+RESULT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "results")
+RESULT_DIR = os.path.abspath(RESULT_DIR)
 os.makedirs(RESULT_DIR, exist_ok=True)
 
 
@@ -206,14 +207,7 @@ def _draw_cut_line(ax, line, color, label):
         zorder=4,
         label=label,
     )
-    # Small scissors icon at midpoint
+    # Cut marker at midpoint
     mx = (lx[0] + lx[-1]) / 2
     my = (ly[0] + ly[-1]) / 2
-    ax.annotate(
-        "✂",
-        xy=(mx, my),
-        fontsize=16,
-        ha="center",
-        va="center",
-        zorder=5,
-    )
+    ax.plot(mx, my, "x", color=color, markersize=12, markeredgewidth=3, zorder=5)

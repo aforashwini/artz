@@ -181,6 +181,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --- Render Results ---
     function renderResults(data) {
+        // Show debug errors if any (temporary)
+        if (data.debug_errors && data.debug_errors.length > 0) {
+            console.error("Visualization errors:", data.debug_errors);
+            showError("Viz debug: " + data.debug_errors[0]);
+        }
+
         // Overview image
         if (data.overview) {
             overviewImg.src = data.overview;
