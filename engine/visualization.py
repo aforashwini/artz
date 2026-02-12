@@ -1,63 +1,50 @@
-import os
-import uuid
+import io
+import base64
 
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
-from matplotlib.patches import FancyArrowPatch
 import numpy as np
-from shapely.geometry import Polygon
-
-
-RESULT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir, "results")
-RESULT_DIR = os.path.abspath(RESULT_DIR)
-os.makedirs(RESULT_DIR, exist_ok=True)
 
 
 def generate_visualization(shape, suggestion, original_image=None):
-    """
-    Generate a visualization image for a single suggestion.
-    Returns the filename of the saved image.
-    """
+    """Generate a visualization image for a single suggestion. Returns a data URI."""
     fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
     try:
         polygon = shape["polygon"]
-        # Simplify for rendering to avoid deep recursion in matplotlib
         if len(polygon.exterior.coords) > 50:
             polygon = polygon.simplify(2.0, preserve_topology=True)
         coords = list(polygon.exterior.coords)
         xs, ys = zip(*coords)
 
-        # Draw original polygon filled
         poly_patch = plt.Polygon(
             list(zip(xs, ys)),
             closed=True,
-            facecolor="#f0f0f0",
-            edgecolor="#2c3e50",
+            facecolor="#EDE9FE",
+            edgecolor="#5B21B6",
             linewidth=2.5,
             zorder=2,
         )
         ax.add_patch(poly_patch)
 
         stype = suggestion["type"]
-        color = suggestion.get("color", "#e74c3c")
+        color = suggestion.get("color", "#5B21B6")
 
         if stype == "splitter":
             if suggestion.get("cut_line"):
-                _draw_cut_line(ax, suggestion["cut_line"], color, "Cut Line")
+                _draw_cut_line(ax, suggestion["cut_line"], color)
             if suggestion.get("new_pieces"):
+                fills = ["#F3E8FF", "#DBEAFE", "#D1FAE5", "#FEF3C7"]
                 for i, piece in enumerate(suggestion["new_pieces"]):
                     try:
                         if piece.geom_type == "MultiPolygon":
                             piece = max(piece.geoms, key=lambda g: g.area)
                         pc = list(piece.exterior.coords)
                         pxs, pys = zip(*pc)
-                        fill = "#ffe0e0" if i % 2 == 0 else "#e0ffe0"
                         p = plt.Polygon(
                             list(zip(pxs, pys)),
                             closed=True,
-                            facecolor=fill,
+                            facecolor=fills[i % len(fills)],
                             edgecolor=color,
                             linewidth=1.5,
                             linestyle="--",
@@ -70,7 +57,7 @@ def generate_visualization(shape, suggestion, original_image=None):
 
         elif stype == "gusset":
             if suggestion.get("cut_line"):
-                _draw_cut_line(ax, suggestion["cut_line"], color, "Gusset Seam")
+                _draw_cut_line(ax, suggestion["cut_line"], color)
             if suggestion.get("concave_point"):
                 cx, cy = suggestion["concave_point"]
                 ax.plot(cx, cy, "o", color=color, markersize=10, zorder=5)
@@ -95,12 +82,11 @@ def generate_visualization(shape, suggestion, original_image=None):
                     color=color, alpha=0.15, zorder=3,
                 )
 
-        # Labels and styling
         ax.set_title(
             suggestion["title"],
             fontsize=14,
             fontweight="bold",
-            color="#2c3e50",
+            color="#1e1b4b",
             pad=15,
         )
 
@@ -134,27 +120,20 @@ def generate_visualization(shape, suggestion, original_image=None):
         ax.set_ylim(max(ys) + 30, min(ys) - 30)
         ax.axis("off")
 
-        fig.tight_layout()
-
-        filename = f"suggestion_{uuid.uuid4().hex[:8]}.png"
-        filepath = os.path.join(RESULT_DIR, filename)
-        fig.savefig(filepath, bbox_inches="tight", facecolor="white", dpi=120)
-        return filename
+        return _fig_to_data_uri(fig)
     finally:
         plt.close(fig)
 
 
 def generate_overview(shapes, original_image):
-    """
-    Generate an overview image showing all detected pieces outlined on the original.
-    """
+    """Generate an overview image showing all detected pieces. Returns a data URI."""
     fig, ax = plt.subplots(1, 1, figsize=(10, 8), dpi=100)
     try:
         import cv2
         rgb = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
         ax.imshow(rgb, alpha=0.5)
 
-        colors = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c"]
+        colors = ["#5B21B6", "#7C3AED", "#2563EB", "#059669", "#D97706", "#DC2626"]
         for i, shape in enumerate(shapes):
             polygon = shape["polygon"]
             if len(polygon.exterior.coords) > 50:
@@ -183,19 +162,24 @@ def generate_overview(shapes, original_image):
                 zorder=3,
             )
 
-        ax.set_title("Detected Pattern Pieces", fontsize=14, fontweight="bold", color="#2c3e50")
+        ax.set_title("Detected Pattern Pieces", fontsize=14, fontweight="bold", color="#1e1b4b")
         ax.axis("off")
-        fig.tight_layout()
 
-        filename = f"overview_{uuid.uuid4().hex[:8]}.png"
-        filepath = os.path.join(RESULT_DIR, filename)
-        fig.savefig(filepath, bbox_inches="tight", facecolor="white", dpi=120)
-        return filename
+        return _fig_to_data_uri(fig)
     finally:
         plt.close(fig)
 
 
-def _draw_cut_line(ax, line, color, label):
+def _fig_to_data_uri(fig):
+    """Convert a matplotlib figure to a PNG base64 data URI."""
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", bbox_inches="tight", facecolor="white", dpi=120)
+    buf.seek(0)
+    b64 = base64.b64encode(buf.read()).decode("ascii")
+    return f"data:image/png;base64,{b64}"
+
+
+def _draw_cut_line(ax, line, color):
     """Draw a dashed cut line on the axes."""
     lx, ly = line.xy
     ax.plot(
@@ -205,9 +189,7 @@ def _draw_cut_line(ax, line, color, label):
         linestyle="--",
         dashes=(8, 4),
         zorder=4,
-        label=label,
     )
-    # Cut marker at midpoint
     mx = (lx[0] + lx[-1]) / 2
     my = (ly[0] + ly[-1]) / 2
     ax.plot(mx, my, "x", color=color, markersize=12, markeredgewidth=3, zorder=5)

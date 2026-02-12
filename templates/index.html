@@ -3,116 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FABRIC WASTE OPTIMIZER // AI Pattern Analysis</title>
+    <title>Pattern Waste Optimizer</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Jura:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
-    <!-- Animated background grid -->
-    <div class="bg-grid"></div>
-    <div class="bg-glow bg-glow-1"></div>
-    <div class="bg-glow bg-glow-2"></div>
-    <div class="bg-glow bg-glow-3"></div>
-
-    <!-- Scan lines overlay -->
-    <div class="scanlines"></div>
+    <div class="grid-bg"></div>
+    <div class="halftone-deco halftone-1"></div>
+    <div class="halftone-deco halftone-2"></div>
 
     <header>
         <div class="container">
             <div class="header-inner">
-                <div class="logo">
-                    <div class="logo-hex">
-                        <svg viewBox="0 0 60 60" class="logo-svg">
-                            <polygon points="30,2 56,17 56,43 30,58 4,43 4,17" fill="none" stroke="url(#neonGrad)" stroke-width="2"/>
-                            <text x="30" y="36" text-anchor="middle" fill="url(#neonGrad)" font-size="22" font-family="Jura">&#9986;</text>
-                            <defs>
-                                <linearGradient id="neonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                    <stop offset="0%" style="stop-color:#00f0ff"/>
-                                    <stop offset="50%" style="stop-color:#bf00ff"/>
-                                    <stop offset="100%" style="stop-color:#00ff88"/>
-                                </linearGradient>
-                            </defs>
-                        </svg>
-                    </div>
-                    <div class="logo-text">
-                        <h1>FABRIC WASTE <span class="neon-text">OPTIMIZER</span></h1>
-                        <div class="tagline">
-                            <span class="tag-dash">&#x2501;&#x2501;</span>
-                            AI-Powered Pattern Cutting Analysis
-                            <span class="tag-dash">&#x2501;&#x2501;</span>
-                        </div>
-                    </div>
+                <div>
+                    <h1 class="brand-title">PATTERN WASTE<br><span>OPTIMIZER</span></h1>
+                    <p class="brand-sub">AI-Powered Cutting Analysis</p>
                 </div>
-                <div class="header-stats">
-                    <div class="header-stat">
-                        <span class="header-stat-val neon-cyan">v2.0</span>
-                        <span class="header-stat-lbl">SYSTEM</span>
-                    </div>
-                    <div class="header-stat">
-                        <span class="header-stat-val neon-magenta">ONLINE</span>
-                        <span class="header-stat-lbl">STATUS</span>
-                    </div>
+                <div class="header-tags">
+                    <span class="tag">SMART CUTTING</span>
+                    <span class="tag">REDUCE SCRAPS</span>
+                    <span class="tag">OPTIMIZE LAYOUTS</span>
                 </div>
             </div>
         </div>
-        <div class="header-line"></div>
     </header>
 
     <main class="container">
         <!-- Upload Section -->
-        <section id="upload-section" class="glass-card fade-in">
-            <div class="card-header-bar">
-                <div class="card-dot"></div>
-                <div class="card-dot"></div>
-                <div class="card-dot"></div>
-                <span class="card-header-label">// UPLOAD MODULE</span>
-            </div>
-
-            <h2>Initialize <span class="neon-text">Pattern Scan</span></h2>
+        <section id="upload-section" class="card fade-in">
+            <div class="card-label">UPLOAD MODULE</div>
+            <h2>INITIALIZE PATTERN SCAN</h2>
             <p class="helper-text">
-                Upload a pattern image with dark outlines on a light background.
+                Upload a garment pattern image with dark outlines on a light background.
                 The AI will vectorize shapes, compute waste geometry, and generate optimization suggestions.
             </p>
 
             <div id="drop-zone" class="drop-zone">
-                <div class="drop-zone-content">
-                    <div class="drop-hex">
-                        <svg viewBox="0 0 80 80" class="drop-svg">
-                            <polygon points="40,4 72,22 72,58 40,76 8,58 8,22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="4 2"/>
-                            <text x="40" y="46" text-anchor="middle" fill="currentColor" font-size="28">&#8682;</text>
-                        </svg>
-                    </div>
-                    <p class="drop-main">Drag &amp; drop pattern image</p>
-                    <p class="drop-sub">or click to browse filesystem</p>
-                    <div class="drop-formats">
-                        <span class="format-tag">PNG</span>
-                        <span class="format-tag">JPG</span>
-                        <span class="format-tag">BMP</span>
-                        <span class="format-tag">TIFF</span>
-                        <span class="format-sep">|</span>
-                        <span class="format-limit">MAX 16 MB</span>
-                    </div>
+                <div class="drop-icon">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <rect x="1" y="1" width="46" height="46" stroke="#7C3AED" stroke-width="2" stroke-dasharray="4 3" fill="none"/>
+                        <path d="M24 14v20M14 24h20" stroke="#5B21B6" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <p class="drop-main">DRAG & DROP PATTERN IMAGE</p>
+                <p class="drop-sub">or click to browse filesystem</p>
+                <div class="drop-formats">
+                    <span class="format-tag">PNG</span>
+                    <span class="format-tag">JPG</span>
+                    <span class="format-tag">BMP</span>
+                    <span class="format-tag">TIFF</span>
+                    <span class="format-sep">|</span>
+                    <span class="format-limit">MAX 16 MB</span>
                 </div>
                 <input type="file" id="file-input" accept=".png,.jpg,.jpeg,.bmp,.tiff" hidden>
             </div>
 
             {% if samples %}
             <div class="samples-section">
-                <div class="section-label">
-                    <span class="label-line"></span>
+                <div class="section-divider">
+                    <span class="divider-line"></span>
                     <span>SAMPLE PATTERNS</span>
-                    <span class="label-line"></span>
+                    <span class="divider-line"></span>
                 </div>
                 <div class="sample-grid">
                     {% for sample in samples %}
                     <button class="sample-btn" data-sample="{{ sample }}">
                         <div class="sample-img-wrap">
                             <img src="/samples/{{ sample }}" alt="{{ sample }}">
-                            <div class="sample-scan-line"></div>
                         </div>
-                        <span class="sample-name">{{ sample.replace('_', ' ').replace('.png', '') | upper }}</span>
+                        <span class="sample-name">{{ sample.replace('_', ' ').replace('.png', '').replace('.jpg', '') | upper }}</span>
                     </button>
                     {% endfor %}
                 </div>
@@ -121,60 +82,38 @@
 
             <div id="preview-area" class="preview-area hidden">
                 <div class="preview-frame">
-                    <div class="preview-corner tl"></div>
-                    <div class="preview-corner tr"></div>
-                    <div class="preview-corner bl"></div>
-                    <div class="preview-corner br"></div>
+                    <div class="corner tl"></div>
+                    <div class="corner tr"></div>
+                    <div class="corner bl"></div>
+                    <div class="corner br"></div>
                     <img id="preview-img" src="" alt="Preview">
                 </div>
-                <button id="analyze-btn" class="btn btn-neon">
-                    <span class="btn-icon">&#9881;</span>
-                    Run Analysis
-                    <span class="btn-glow"></span>
+                <button id="analyze-btn" class="btn btn-primary">
+                    RUN ANALYSIS
                 </button>
             </div>
         </section>
 
         <!-- Loading -->
-        <section id="loading-section" class="glass-card hidden">
+        <section id="loading-section" class="card hidden">
             <div class="loader-wrap">
-                <div class="loader-ring">
-                    <div class="loader-ring-inner"></div>
-                    <svg class="loader-hex" viewBox="0 0 100 100">
-                        <polygon points="50,5 91,27.5 91,72.5 50,95 9,72.5 9,27.5" fill="none" stroke="url(#loadGrad)" stroke-width="2" stroke-dasharray="6 3">
-                            <animateTransform attributeName="transform" type="rotate" from="0 50 50" to="360 50 50" dur="4s" repeatCount="indefinite"/>
-                        </polygon>
-                        <polygon points="50,15 81,32.5 81,67.5 50,85 19,67.5 19,32.5" fill="none" stroke="url(#loadGrad2)" stroke-width="1.5" stroke-dasharray="4 4">
-                            <animateTransform attributeName="transform" type="rotate" from="360 50 50" to="0 50 50" dur="3s" repeatCount="indefinite"/>
-                        </polygon>
-                        <defs>
-                            <linearGradient id="loadGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#00f0ff"/>
-                                <stop offset="100%" style="stop-color:#bf00ff"/>
-                            </linearGradient>
-                            <linearGradient id="loadGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                                <stop offset="0%" style="stop-color:#00ff88"/>
-                                <stop offset="100%" style="stop-color:#00f0ff"/>
-                            </linearGradient>
-                        </defs>
-                    </svg>
-                </div>
-                <h3 class="loader-title">Analyzing Pattern Geometry<span class="typing-dots"></span></h3>
+                <div class="loader-spinner"></div>
+                <h3 class="loader-title">ANALYZING PATTERN GEOMETRY</h3>
                 <div class="loader-steps">
                     <div class="loader-step active" id="step-detect">
-                        <span class="step-indicator"></span>
+                        <span class="step-dot"></span>
                         Detecting contours &amp; vectorizing shapes
                     </div>
                     <div class="loader-step" id="step-analyze">
-                        <span class="step-indicator"></span>
+                        <span class="step-dot"></span>
                         Computing waste factors &amp; concavity metrics
                     </div>
                     <div class="loader-step" id="step-suggest">
-                        <span class="step-indicator"></span>
+                        <span class="step-dot"></span>
                         Generating optimization suggestions
                     </div>
                     <div class="loader-step" id="step-render">
-                        <span class="step-indicator"></span>
+                        <span class="step-dot"></span>
                         Rendering visual overlays
                     </div>
                 </div>
@@ -183,35 +122,26 @@
 
         <!-- Results Section -->
         <section id="results-section" class="hidden">
-            <!-- Overview -->
-            <div id="overview-card" class="glass-card fade-in">
-                <div class="card-header-bar">
-                    <div class="card-dot"></div>
-                    <div class="card-dot"></div>
-                    <div class="card-dot"></div>
-                    <span class="card-header-label">// SCAN RESULTS</span>
-                </div>
-                <h2>Detection <span class="neon-text">Overview</span></h2>
+            <div id="overview-card" class="card fade-in">
+                <div class="card-label">SCAN RESULTS</div>
+                <h2>DETECTION OVERVIEW</h2>
                 <div class="overview-content">
                     <div class="overview-img-wrap">
-                        <div class="preview-corner tl"></div>
-                        <div class="preview-corner tr"></div>
-                        <div class="preview-corner bl"></div>
-                        <div class="preview-corner br"></div>
+                        <div class="corner tl"></div>
+                        <div class="corner tr"></div>
+                        <div class="corner bl"></div>
+                        <div class="corner br"></div>
                         <img id="overview-img" src="" alt="Overview">
                     </div>
                     <div id="overview-stats" class="stats-panel"></div>
                 </div>
             </div>
 
-            <!-- Suggestions per piece -->
             <div id="suggestions-container"></div>
 
-            <!-- Start Over -->
             <div class="center-action">
                 <button id="reset-btn" class="btn btn-outline">
-                    <span class="btn-icon">&#8634;</span>
-                    Analyze Another Pattern
+                    ANALYZE ANOTHER PATTERN
                 </button>
             </div>
         </section>
@@ -220,9 +150,9 @@
     <footer>
         <div class="container">
             <div class="footer-inner">
-                <div class="footer-brand">FABRIC WASTE OPTIMIZER</div>
-                <div class="footer-divider"></div>
-                <div class="footer-sub">AI-Powered Pattern Cutting Analysis System</div>
+                <span class="footer-brand">PATTERN WASTE OPTIMIZER</span>
+                <span class="footer-sep"></span>
+                <span class="footer-sub">AI-Powered Cutting Analysis</span>
             </div>
         </div>
     </footer>

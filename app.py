@@ -3,7 +3,6 @@ import sys
 import uuid
 import traceback
 
-# Shapely split operations can recurse deeply on complex polygons
 sys.setrecursionlimit(10000)
 
 from flask import Flask, render_template, request, jsonify, send_from_directory
@@ -17,9 +16,8 @@ from engine.visualization import generate_visualization, generate_overview
 app = Flask(__name__)
 _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app.config["UPLOAD_FOLDER"] = os.path.join(_BASE_DIR, "uploads")
-app.config["RESULT_FOLDER"] = os.path.join(_BASE_DIR, "results")
 app.config["SAMPLE_FOLDER"] = os.path.join(_BASE_DIR, "samples")
-app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024  # 16 MB max
+app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
 
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg", "bmp", "tiff"}
 
@@ -30,7 +28,6 @@ def allowed_file(filename):
 
 @app.route("/")
 def index():
-    # List available sample images
     samples = []
     sample_dir = app.config["SAMPLE_FOLDER"]
     if os.path.isdir(sample_dir):
@@ -46,7 +43,6 @@ def analyze():
     try:
         filepath = None
 
-        # Check if using a sample image
         sample_name = request.form.get("sample")
         if sample_name:
             sample_path = os.path.join(app.config["SAMPLE_FOLDER"], secure_filename(sample_name))
@@ -55,7 +51,6 @@ def analyze():
             else:
                 return jsonify({"error": f"Sample '{sample_name}' not found."}), 404
 
-        # Check if a file was uploaded
         if filepath is None:
             if "file" not in request.files:
                 return jsonify({"error": "No file uploaded."}), 400
@@ -65,7 +60,6 @@ def analyze():
             if not allowed_file(file.filename):
                 return jsonify({"error": "File type not allowed. Use PNG, JPG, BMP, or TIFF."}), 400
 
-            # Save uploaded file
             ext = file.filename.rsplit(".", 1)[1].lower()
             filename = f"{uuid.uuid4().hex}.{ext}"
             filepath = os.path.join(app.config["UPLOAD_FOLDER"], filename)
@@ -75,25 +69,18 @@ def analyze():
         shapes, original_image = extract_shapes(filepath)
         results = generate_suggestions(shapes)
 
-        # Generate overview image
-        overview_error = None
+        # Generate overview (returns base64 data URI)
         try:
-            overview_file = generate_overview(shapes, original_image)
-            overview_url = f"/results/{overview_file}"
-        except (RecursionError, Exception) as e:
+            overview_url = generate_overview(shapes, original_image)
+        except Exception:
             traceback.print_exc()
             overview_url = None
-            overview_error = f"{type(e).__name__}: {e}"
 
-        # Generate suggestion visualizations
         response_data = {
             "overview": overview_url,
             "piece_count": len(shapes),
             "pieces": [],
-            "debug_errors": [],
         }
-        if overview_error:
-            response_data["debug_errors"].append(f"overview: {overview_error}")
 
         for result in results:
             shape = result["shape"]
@@ -102,14 +89,10 @@ def analyze():
 
             for suggestion in result["suggestions"]:
                 try:
-                    vis_file = generate_visualization(shape, suggestion, original_image)
-                    image_url = f"/results/{vis_file}"
-                except (RecursionError, Exception) as e:
+                    image_url = generate_visualization(shape, suggestion, original_image)
+                except Exception:
                     traceback.print_exc()
                     image_url = None
-                    response_data["debug_errors"].append(
-                        f"{suggestion.get('title', '?')}: {type(e).__name__}: {e}"
-                    )
 
                 suggestions_out.append({
                     "type": suggestion["type"],
@@ -139,19 +122,12 @@ def analyze():
         return jsonify({"error": f"Analysis failed: {str(e)}"}), 500
 
 
-@app.route("/results/<filename>")
-def serve_result(filename):
-    return send_from_directory(app.config["RESULT_FOLDER"], filename)
-
-
 @app.route("/samples/<filename>")
 def serve_sample(filename):
     return send_from_directory(app.config["SAMPLE_FOLDER"], filename)
 
 
-# Ensure directories exist at import time (needed for Render/gunicorn)
 os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
-os.makedirs(app.config["RESULT_FOLDER"], exist_ok=True)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=5000)
