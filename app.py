@@ -75,11 +75,16 @@ def analyze():
         results = generate_suggestions(shapes)
 
         # Generate overview image
-        overview_file = generate_overview(shapes, original_image)
+        try:
+            overview_file = generate_overview(shapes, original_image)
+            overview_url = f"/results/{overview_file}"
+        except (RecursionError, Exception) as e:
+            traceback.print_exc()
+            overview_url = None
 
         # Generate suggestion visualizations
         response_data = {
-            "overview": f"/results/{overview_file}",
+            "overview": overview_url,
             "piece_count": len(shapes),
             "pieces": [],
         }
@@ -90,7 +95,13 @@ def analyze():
             suggestions_out = []
 
             for suggestion in result["suggestions"]:
-                vis_file = generate_visualization(shape, suggestion, original_image)
+                try:
+                    vis_file = generate_visualization(shape, suggestion, original_image)
+                    image_url = f"/results/{vis_file}"
+                except (RecursionError, Exception) as e:
+                    traceback.print_exc()
+                    image_url = None
+
                 suggestions_out.append({
                     "type": suggestion["type"],
                     "title": suggestion["title"],
@@ -98,7 +109,7 @@ def analyze():
                     "savings_pct": suggestion["savings_pct"],
                     "impact": suggestion.get("impact", ""),
                     "color": suggestion.get("color", "#333"),
-                    "image": f"/results/{vis_file}",
+                    "image": image_url,
                 })
 
             response_data["pieces"].append({

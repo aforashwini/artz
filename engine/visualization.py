@@ -21,6 +21,9 @@ def generate_visualization(shape, suggestion, original_image=None):
     fig, ax = plt.subplots(1, 1, figsize=(8, 6), dpi=100)
 
     polygon = shape["polygon"]
+    # Simplify for rendering to avoid deep recursion in matplotlib
+    if len(polygon.exterior.coords) > 50:
+        polygon = polygon.simplify(2.0, preserve_topology=True)
     coords = list(polygon.exterior.coords)
     xs, ys = zip(*coords)
 
@@ -147,6 +150,8 @@ def generate_overview(shapes, original_image):
     colors = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c"]
     for i, shape in enumerate(shapes):
         polygon = shape["polygon"]
+        if len(polygon.exterior.coords) > 50:
+            polygon = polygon.simplify(2.0, preserve_topology=True)
         coords = list(polygon.exterior.coords)
         xs, ys = zip(*coords)
         color = colors[i % len(colors)]

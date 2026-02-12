@@ -34,15 +34,16 @@ def extract_shapes(image_path):
         if area < min_area:
             continue
 
-        # Approximate polygon to reduce vertices
-        epsilon = 0.005 * cv2.arcLength(contour, True)
+        # Approximate polygon — use larger epsilon to keep vertex count low
+        # (prevents recursion depth issues in Shapely/matplotlib downstream)
+        epsilon = 0.02 * cv2.arcLength(contour, True)
         approx = cv2.approxPolyDP(contour, epsilon, True)
 
         # Need at least 3 points for a polygon
         if len(approx) < 3:
             continue
 
-        coords = [(pt[0][0], pt[0][1]) for pt in approx]
+        coords = [(int(pt[0][0]), int(pt[0][1])) for pt in approx]
         try:
             polygon = Polygon(coords)
             if not polygon.is_valid:
@@ -50,6 +51,9 @@ def extract_shapes(image_path):
             # buffer(0) can return MultiPolygon; take the largest piece
             if polygon.geom_type == "MultiPolygon":
                 polygon = max(polygon.geoms, key=lambda g: g.area)
+            # Final simplification to cap vertex count
+            if len(polygon.exterior.coords) > 50:
+                polygon = polygon.simplify(2.0, preserve_topology=True)
             if polygon.is_empty or polygon.area < min_area:
                 continue
         except (RecursionError, Exception):
