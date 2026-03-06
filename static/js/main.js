@@ -208,16 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 const bgTint = hexToRgba(s.color, 0.06);
                 const borderTint = hexToRgba(s.color, 0.2);
 
-                const imgHTML = s.image
-                    ? `<img src="${s.image}" alt="${s.title}">`
-                    : `<div class="suggestion-img-placeholder">
-                         <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-                           <rect x="2" y="2" width="28" height="28" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2" fill="none"/>
-                           <path d="M10 16h12M16 10v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                         </svg>
-                         <small>Diagram unavailable</small>
-                       </div>`;
-
                 suggestionsHTML += `
                     <div class="suggestion-card">
                         <div class="suggestion-card-header" style="background: ${bgTint}; border-left: 3px solid ${s.color};">
@@ -225,7 +215,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             <span class="impact-badge" style="background: ${bgTint}; color: ${s.color}; border: 1px solid ${borderTint};">${s.impact}</span>
                         </div>
                         <div class="suggestion-card-body">
-                            ${imgHTML}
                             <div class="suggestion-text">
                                 <p>${s.description}</p>
                                 <span class="savings-tag" style="background: ${bgTint}; color: ${s.color}; border-color: ${borderTint};">

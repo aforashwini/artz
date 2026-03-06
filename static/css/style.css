@@ -816,41 +816,7 @@ h3 {
 }
 
 .suggestion-card-body {
-    display: flex;
-    gap: 24px;
     padding: 20px;
-    align-items: flex-start;
-}
-
-.suggestion-card-body img {
-    width: 320px;
-    max-width: 45%;
-    border: 1.5px solid var(--border);
-    flex-shrink: 0;
-    background: white;
-}
-
-.suggestion-img-placeholder {
-    width: 320px;
-    max-width: 45%;
-    min-height: 200px;
-    border: 1.5px dashed var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: var(--text-secondary);
-    font-size: 1.5rem;
-    flex-shrink: 0;
-    background: var(--bg);
-}
-
-.suggestion-img-placeholder small {
-    font-size: 0.65rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: 600;
 }
 
 .suggestion-text { flex: 1; min-width: 0; }
@@ -972,9 +938,6 @@ footer {
     .stats-panel { width: 100%; flex-direction: row; flex-wrap: wrap; }
     .stat-item { flex: 1; min-width: 100px; }
 
-    .suggestion-card-body { flex-direction: column; }
-    .suggestion-card-body img,
-    .suggestion-img-placeholder { max-width: 100%; width: 100%; }
 
     .card { padding: 20px; }
     .sample-grid { grid-template-columns: repeat(2, 1fr); }
